@@ -10,77 +10,91 @@ from django.contrib import messages
 # Carrega o modelo do spaCy
 nlp = spacy.load("pt_core_news_lg")
 
+# Em extractor/views.py
+
 def processar_documento_com_spacy(texto):
     doc = nlp(texto)
     entidades = []
     spans_ocupados = []
 
-    # LISTA DE EXCLUSÃO ATUALIZADA com o ruído que encontramos.
     stop_list = {
-        "contratante", "contratada", "cláusula", "cláusula primeira", "objeto",
-        "preço", "prazo", "serviços", "desenvolvimento", "sr", "sra", "sr(a", "brasileiro(a)",
-        "testemunhas", "contrato de prestação de serviços"
+        "contratante", "contratada", "cláusula", "cláusulas", "cláusula primeira", 
+        "objeto", "valor", "preço", "prazo", "serviços", "desenvolvimento", "sr", "sra", 
+        "sr(a", "testemunhas", "contrato de prestação de serviços", "pelo presente instrumento",
+        "partes", "instrumento", "presente", "brasileiro", "brasileira", "brasileiro(a)"
     }
 
     def adicionar_entidade(span, tipo, is_ner=False):
+        # Evita sobreposição e duplicatas
         for inicio, fim in spans_ocupados:
             if span.start_char >= inicio and span.end_char <= fim: return
             if span.start_char < fim and span.end_char > inicio: return
         
-        texto_limpo = span.text.strip()
+        texto_limpo = span.text.strip(" .,:;-")
         if is_ner and texto_limpo.lower() in stop_list: return
-        
-        # Ignora entidades muito curtas ou que são apenas pontuação
         if len(texto_limpo) < 2 or texto_limpo in ".,:;": return
 
         entidades.append({'texto': texto_limpo, 'tipo': tipo})
         spans_ocupados.append((span.start_char, span.end_char))
 
-    # --- CAMADA 1: Regex (Continua igual, é muito confiável) ---
+    # --- CAMADA 1: Regex para dados estruturados (CPF, CNPJ, Valor) ---
     for match in re.finditer(r"\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}", doc.text):
-        span = doc.char_span(match.start(), match.end(), label="CNPJ")
+        span = doc.char_span(match.start(), match.end())
         if span: adicionar_entidade(span, "Documento (CNPJ)")
     for match in re.finditer(r"\d{3}\.\d{3}\.\d{3}-\d{2}", doc.text):
-        span = doc.char_span(match.start(), match.end(), label="CPF")
+        span = doc.char_span(match.start(), match.end())
         if span: adicionar_entidade(span, "Documento (CPF)")
     for match in re.finditer(r"R\$\s?[\d\.,]+", doc.text):
-        span = doc.char_span(match.start(), match.end(), label="VALOR")
+        span = doc.char_span(match.start(), match.end())
         if span: adicionar_entidade(span, "Valor Monetário")
 
-    # --- CAMADA 2: Regras de Contexto (O GRANDE APRIMORAMENTO) ---
-    matcher = Matcher(nlp.vocab)
-    # PADRÃO "GULOSO": Agora inclui Adjetivos (ADJ) e Adposições (ADP, como "de", "da").
-    # Isso permite capturar "TechSolutions Inovação LTDA" e "João da Silva Consultoria".
-    padrao_parte = [
-        {"LOWER": {"IN": ["contratante", "contratada"]}},
-        {"IS_PUNCT": True, "OP": "?"},
-        {"POS": {"IN": ["PROPN", "NOUN", "PUNCT", "ADJ", "ADP"]}, "OP": "+"}
-    ]
-    matcher.add("PARTE_CONTRATO", [padrao_parte])
+    # --- CAMADA 2: EXTRAÇÃO DE CONTEXTO GARANTIDA (OBJETO E PARTES) ---
     
-    for match_id, start, end in matcher(doc):
-        span = doc[start:end]
-        texto_limpo = re.sub(r'^(contratante|contratada)\s*[:\-]?\s*', '', span.text, flags=re.IGNORECASE)
-        
-        char_start = span.text.find(texto_limpo) + span.start_char
-        char_end = char_start + len(texto_limpo)
-        span_limpo = doc.char_span(char_start, char_end, label="PARTE")
-        
-        if span_limpo and any(token.is_alpha for token in span_limpo):
-            adicionar_entidade(span_limpo, "Parte do Contrato")
+    # Extração robusta do OBJETO
+    match_objeto = re.search(r'^\s*objeto.*:\s*(.*)', texto, re.IGNORECASE | re.MULTILINE)
+    if match_objeto:
+        texto_objeto = match_objeto.group(1).strip()
+        char_start = texto.find(texto_objeto)
+        if char_start != -1:
+            span = doc.char_span(char_start, char_start + len(texto_objeto))
+            if span: adicionar_entidade(span, "Objeto do Contrato")
 
-    # --- CAMADA 3: IA Genérica (NER) para capturar o que sobrou ---
-    labels_map = {
-        "PER": "Pessoa",
-        "LOC": "Local",
-        "ORG": "Organização",
-        "DATE": "Data",
-    }
+    # Extração GARANTIDA das PARTES com classificação posterior
+    for parte_keyword in ['contratante', 'contratada']:
+        match_parte = re.search(rf'^\s*{parte_keyword}.*:\s*(.*)', texto, re.IGNORECASE | re.MULTILINE)
+        if match_parte:
+            texto_parte = match_parte.group(1).strip()
+            if not texto_parte: continue
+
+            char_start = texto.find(texto_parte)
+            if char_start == -1: continue
+            span_parte = doc.char_span(char_start, char_start + len(texto_parte))
+
+            if span_parte:
+                doc_snippet = nlp(texto_parte)
+                tipo_final = None
+                
+                # Tenta classificar usando a IA no trecho isolado
+                if doc_snippet.ents:
+                    entidade_principal = doc_snippet.ents[0]
+                    if entidade_principal.label_ == 'ORG':
+                        tipo_final = "Parte (Organização)"
+                    elif entidade_principal.label_ == 'PER':
+                        tipo_final = "Parte (Pessoa)"
+                
+                # Se a IA falhou, usa um tipo genérico (NUNCA PERDE A INFORMAÇÃO)
+                if tipo_final is None:
+                    tipo_final = "Parte (Indefinido)"
+                
+                adicionar_entidade(span_parte, tipo_final)
+
+    # --- CAMADA 3: IA Genérica para capturar o que sobrou (locais, datas, etc.) ---
+    labels_map = { "PER": "Pessoa", "LOC": "Local", "ORG": "Organização", "DATE": "Data" }
     for entidade in doc.ents:
         label = labels_map.get(entidade.label_)
         if label:
             adicionar_entidade(entidade, label, is_ner=True)
-
+            
     return entidades
 
 # --- VIEW DE UPLOAD (ATUALIZADA) ---

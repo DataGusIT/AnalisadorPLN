@@ -18,16 +18,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
     const deleteTriggers = document.querySelectorAll('.delete-trigger');
 
-    // Função para abrir o modal
+    // Função para abrir o modal de exclusão
     function openModal() {
-        modalBackdrop.classList.remove('hidden');
-        deleteModal.classList.remove('hidden');
+        if (modalBackdrop && deleteModal) {
+            modalBackdrop.classList.remove('hidden');
+            deleteModal.classList.remove('hidden');
+        }
     }
 
-    // Função para fechar o modal
+    // Função para fechar o modal de exclusão
     function closeModal() {
-        modalBackdrop.classList.add('hidden');
-        deleteModal.classList.add('hidden');
+        if (modalBackdrop && deleteModal) {
+            modalBackdrop.classList.add('hidden');
+            deleteModal.classList.add('hidden');
+        }
     }
 
     // Adiciona evento para cada botão de exclusão
@@ -35,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function (event) {
             event.preventDefault();
             const deleteUrl = this.getAttribute('data-url');
-            if (deleteUrl) {
+            if (deleteUrl && confirmDeleteForm) {
                 confirmDeleteForm.setAttribute('action', deleteUrl);
                 openModal();
             }
@@ -45,11 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Evento para fechar o modal ao clicar no botão "Cancelar"
     if (cancelDeleteBtn) {
         cancelDeleteBtn.addEventListener('click', closeModal);
-    }
-
-    // Evento para fechar o modal ao clicar no fundo
-    if (modalBackdrop) {
-        modalBackdrop.addEventListener('click', closeModal);
     }
 
     // Lógica para mostrar o nome do arquivo selecionado no input
@@ -66,20 +65,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- LÓGICA PARA O TOGGLE DE TEMA (DARK/LIGHT) ---
-
     const themeToggle = document.getElementById('theme-toggle');
-    const htmlElement = document.documentElement; // Seleciona o elemento <html>
+    const htmlElement = document.documentElement;
 
-    // Função para aplicar o tema e salvar a preferência
     function setTeam(theme) {
-        localStorage.setItem('theme', theme); // Salva no storage do navegador
-        htmlElement.setAttribute('data-theme', theme); // Aplica o atributo no HTML
+        localStorage.setItem('theme', theme);
+        htmlElement.setAttribute('data-theme', theme);
         if (themeToggle) {
             themeToggle.checked = theme === 'dark';
         }
     }
 
-    // Evento de clique no toggle
     if (themeToggle) {
         themeToggle.addEventListener('change', function () {
             const newTheme = this.checked ? 'dark' : 'light';
@@ -87,47 +83,96 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Função para carregar o tema na inicialização da página
     function loadTheme() {
         const savedTheme = localStorage.getItem('theme');
-        // Verifica se o usuário tem preferência de sistema por tema escuro
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
         if (savedTheme) {
-            // Se houver um tema salvo, usa ele
             setTeam(savedTheme);
         } else if (prefersDark) {
-            // Se não houver tema salvo, mas o sistema preferir o escuro, usa o escuro
             setTeam('dark');
         } else {
-            // Caso contrário, usa o tema claro como padrão
             setTeam('light');
         }
     }
-
-    // Carrega o tema assim que a página é carregada
     loadTheme();
 
     // --- LÓGICA PARA HEADER DINÂMICO AO ROLAR A PÁGINA ---
     const header = document.querySelector('header');
-
-    // Função para verificar a posição da rolagem e aplicar a classe
     function handleScroll() {
         if (header) {
-            if (window.scrollY > 10) { // Adiciona a classe após rolar 10 pixels
+            if (window.scrollY > 10) {
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
             }
         }
     }
-
-    // Adiciona o evento de rolagem
     window.addEventListener('scroll', handleScroll);
-
-    // Executa a função uma vez no carregamento para o caso da página já carregar rolada
     handleScroll();
 
+    // --- LÓGICA PARA O MENU HAMBÚRGUER ---
+    const menuToggle = document.getElementById('menu-toggle');
+    const closeMenuBtn = document.getElementById('close-menu-btn');
+    const mainNav = document.getElementById('main-nav');
 
+    function openMobileMenu() {
+        if (mainNav && modalBackdrop) {
+            // Garante que o backdrop esteja visível e com a transição certa
+            modalBackdrop.style.transition = 'opacity 0.4s ease';
+            modalBackdrop.classList.remove('hidden');
+
+            // Força o navegador a aplicar o "display" antes de iniciar a transição de opacidade
+            requestAnimationFrame(() => {
+                modalBackdrop.style.opacity = '1';
+            });
+
+            mainNav.classList.add('mobile-nav-active');
+        }
+    }
+
+    function closeMobileMenu() {
+        if (mainNav && modalBackdrop && mainNav.classList.contains('mobile-nav-active')) {
+            // Previne múltiplos cliques enquanto a animação está rodando
+            if (mainNav.classList.contains('is-closing')) {
+                return;
+            }
+
+            // 1. Adiciona a classe que dispara a animação de saída no CSS
+            mainNav.classList.add('is-closing');
+
+            // Faz o backdrop sumir suavemente
+            modalBackdrop.style.opacity = '0';
+
+            // 2. Ouve o evento de FIM da animação no menu
+            mainNav.addEventListener('animationend', () => {
+                // 3. Quando a animação termina, esconde os elementos e limpa as classes/estilos
+                mainNav.classList.remove('mobile-nav-active');
+                modalBackdrop.classList.add('hidden');
+
+                mainNav.classList.remove('is-closing'); // Limpa a classe de fechamento
+
+                // Limpa o estilo de opacidade para não afetar a próxima abertura
+                modalBackdrop.style.opacity = '';
+
+            }, { once: true }); // A opção { once: true } garante que o evento só seja ouvido uma vez
+        }
+    }
+
+    // Adiciona os event listeners que "conectam" os cliques às funções
+    if (menuToggle) {
+        menuToggle.addEventListener('click', openMobileMenu);
+    }
+
+    if (closeMenuBtn) {
+        closeMenuBtn.addEventListener('click', closeMobileMenu);
+    }
+
+    // Evento de clique no fundo (backdrop) para fechar TUDO (modal e menu)
+    if (modalBackdrop) {
+        modalBackdrop.addEventListener('click', function () {
+            closeModal();      // Fecha o modal de exclusão se estiver aberto
+            closeMobileMenu(); // Fecha o menu mobile se estiver aberto
+        });
+    }
 
 });
