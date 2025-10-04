@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Histórico de Análises{% endblock %}
+
+{% block content %}
+<div class="details-header">
+    <h1><i class="fa-solid fa-clock-rotate-left title-icon-alt"></i> Histórico de Análises de Currículos</h1>
+</div>
+
+{% if candidatos %}
+    <div class="table-wrapper">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Nome do Arquivo</th>
+                    <th>Data de Upload</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidato in candidatos %}
+                <tr>
+                    <td data-label="Arquivo">{{ candidato.curriculo_original.name|cut:"curriculos/" }}</td>
+                    <td data-label="Data">{{ candidato.data_de_upload|date:"d/m/Y H:i" }}</td>
+                    <td class="actions-cell">
+                        <a href="{% url 'core:detalhe_candidato' candidato.id %}" class="btn-details">
+                            <i class="fa-solid fa-eye"></i> Ver Detalhes
+                        </a>
+                        <button type="button" class="btn-delete-link delete-trigger" data-url="{% url 'core:delete_candidato' candidato.id %}">
+                           <i class="fa-solid fa-trash"></i> Excluir
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="empty-history">
+        <i class="fa-solid fa-folder-open"></i>
+        <p>Nenhum currículo foi analisado ainda.</p>
+        <a href="{% url 'core:upload_curriculo' %}" class="btn btn-primary" style="margin-top: 20px; width: auto;">Analisar Primeiro Currículo</a>
+    </div>
+{% endif %}
+{% endblock %}

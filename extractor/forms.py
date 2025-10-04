@@ -6,5 +6,5 @@ from .models import Documento
 class DocumentoForm(forms.ModelForm):
     class Meta:
         model = Documento
-        # Pedimos ao usuário um título e o arquivo.
-        fields = ('titulo', 'arquivo_original')
+        # CORREÇÃO: Adicione a vírgula no final para criar uma tupla.
+        fields = ('arquivo_original',)

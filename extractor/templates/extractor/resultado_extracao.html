@@ -3,27 +3,43 @@
 {% block title %}Resultado da Extração{% endblock %}
 
 {% block content %}
-    <h1>Resultado da Extração</h1>
-    <p>Documento: <strong>{{ documento.titulo }}</strong></p>
-
-    <div class="results-grid">
-        <div class="column">
-            <h2>Entidades Encontradas</h2>
-            {% for tipo, textos in entidades_agrupadas.items %}
-                <h3>{{ tipo }}</h3>
-                <ul>
-                    {% for texto in textos %}
-                        <li>{{ texto }}</li>
-                    {% endfor %}
-                </ul>
-            {% empty %}
-                <p style="text-align: left;">Nenhuma entidade foi encontrada.</p>
-            {% endfor %}
-        </div>
-        <div class="column">
-            <h2>Texto Completo</h2>
-            <div class="full-text-display">{{ documento.texto_do_documento }}</div>
-        </div>
+<div class="details-header">
+    <h1><i class="fa-solid fa-tags title-icon-alt"></i> Entidades Extraídas</h1>
+    <div class="header-actions">
+        <a href="{% url 'extractor:upload_documento' %}" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+        </a>
+        <button type="button" class="btn btn-delete delete-trigger" data-url="{% url 'extractor:delete_documento' documento.id %}">
+            <i class="fa-solid fa-trash-can"></i> Excluir
+        </button>
     </div>
-    <a class="action-link" href="{% url 'extractor:upload_documento' %}">Analisar outro documento</a>
+</div>
+
+<div class="document-title-card">
+    <h3><i class="fa-solid fa-file-alt"></i> Documento: {{ documento.titulo }}</h3>
+</div>
+
+<!-- Container para os grupos de entidades -->
+<div class="entity-groups-grid">
+    {% if entidades_agrupadas %}
+        <!-- Loop através dos grupos de entidades (ex: 'Parte do Contrato', 'Documento (CNPJ)', etc.) -->
+        {% for tipo, textos in entidades_agrupadas.items %}
+        <div class="entity-group-card">
+            <h4 class="entity-group-title">{{ tipo }}</h4>
+            <ul class="entity-group-list">
+                <!-- Loop através dos textos dentro de cada grupo -->
+                {% for texto in textos %}
+                <li>{{ texto }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    {% else %}
+        <!-- Mensagem exibida se nenhuma entidade for encontrada -->
+        <div class="empty-history" style="grid-column: 1 / -1;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <p>Nenhuma entidade foi extraída deste documento.</p>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

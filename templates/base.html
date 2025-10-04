@@ -5,22 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Analisador Inteligente{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
     <header>
         <div class="nav-container">
-            <a href="{% url 'upload_curriculo' %}" class="logo"><i class="fa-solid fa-brain"></i> Analisador IA</a>
-            <nav>
-                <a href="{% url 'upload_curriculo' %}" class="{% if request.resolver_match.app_name == 'core' %}active{% endif %}">Analisador de Currículos</a>
-                <a href="{% url 'extractor:upload_documento' %}" class="{% if request.resolver_match.app_name == 'extractor' %}active{% endif %}">Extrator de Documentos</a>
-            </nav>
+            <a href="{% url 'core:upload_curriculo' %}" class="logo">
+                <i class="fa-solid fa-brain"></i>
+                <span>Analisador IA</span>
+            </a>
+
+            <div class="nav-controls">
+                <nav>
+                    <a href="{% url 'core:upload_curriculo' %}" class="nav-link {% if request.resolver_match.app_name == 'core' %}active{% endif %}">
+                        <i class="fa-regular fa-file-lines"></i> Analisador de Currículos
+                    </a>
+                        <a href="{% url 'extractor:upload_documento' %}" class="nav-link {% if request.resolver_match.app_name == 'extractor' %}active{% endif %}">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Extrator de Documentos
+                    </a>
+                </nav>
+
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="theme-toggle">
+                        <input type="checkbox" id="theme-toggle" />
+                        <div class="slider">
+                            <i class="fa-solid fa-sun"></i>
+                            <i class="fa-solid fa-moon"></i>
+                        </div>
+                    </label>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Container para mensagens de sucesso/erro -->
     {% if messages %}
     <div class="alerts-container">
         {% for message in messages %}
@@ -39,26 +61,27 @@
             </main>
         </div>
     </div>
-    
+
     <footer>
         <p>&copy; {% now "Y" %} Analisador Inteligente. Um projeto com Django, PostgreSQL & spaCy.</p>
     </footer>
 
-    <!-- Modal de Exclusão (escondido por padrão) -->
     <div id="modalBackdrop" class="modal-backdrop hidden"></div>
     <div id="deleteModal" class="modal hidden">
-        <h2>Confirmar Exclusão</h2>
-        <p id="deleteModalText">Você tem certeza?</p>
-        <form id="confirmDeleteForm" method="post" style="display: inline;">
-            {% csrf_token %}
-            <div class="form-actions">
-                <button type="button" id="cancelDeleteBtn" class="btn btn-secondary">Cancelar</button>
-                <button type="submit" class="btn btn-delete-confirm">Sim, Excluir</button>
-            </div>
-        </form>
+        <div class="modal-content">
+            <i class="fa-solid fa-triangle-exclamation modal-icon"></i>
+            <h2>Confirmar Exclusão</h2>
+            <p id="deleteModalText">Você tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.</p>
+            <form id="confirmDeleteForm" method="post" action="">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="button" id="cancelDeleteBtn" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-delete-confirm">Sim, Excluir</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <!-- Link para nosso arquivo JS -->
     <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

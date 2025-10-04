@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Histórico de Documentos{% endblock %}
+
+{% block content %}
+<div class="details-header">
+    <h1><i class="fa-solid fa-archive title-icon-alt"></i> Documentos Processados</h1>
+</div>
+
+{% if documentos %}
+    <div class="table-wrapper">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Nome do Arquivo</th>
+                    <th>Data de Upload</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for documento in documentos %}
+                <tr>
+                    <td data-label="Arquivo">{{ documento.titulo }}</td>
+                    <td data-label="Data">{{ documento.data_de_upload|date:"d/m/Y H:i" }}</td>
+                    <td class="actions-cell">
+                        <a href="{% url 'extractor:resultado_extracao' documento.id %}" class="btn-details">
+                            <i class="fa-solid fa-tags"></i> Ver Entidades
+                        </a>
+                        <button type="button" class="btn-delete-link delete-trigger" data-url="{% url 'extractor:delete_documento' documento.id %}">
+                           <i class="fa-solid fa-trash"></i> Excluir
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="empty-history">
+        <i class="fa-solid fa-box-open"></i>
+        <p>Nenhum documento foi processado ainda.</p>
+        <a href="{% url 'extractor:upload_documento' %}" class="btn btn-primary" style="margin-top: 20px; width: auto;">Processar Primeiro Documento</a>
+    </div>
+{% endif %}
+
+{% endblock %}

@@ -1,16 +1,32 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Analisador de Currículos{% endblock %}
 
 {% block content %}
-    <div class="sub-nav">
-        <a href="{% url 'historico_candidatos' %}" class="sub-nav-link"><i class="fa-solid fa-list-ul"></i> Ver Histórico</a>
+<a href="{% url 'core:historico_candidatos' %}" class="btn-history">
+    <i class="fa-solid fa-clock-rotate-left"></i> Histórico
+</a>
+
+<div class="upload-section">
+    <div class="upload-header">
+        <i class="fa-solid fa-cloud-arrow-up title-icon"></i>
+        <h1>Analisador de Currículos</h1>
+        <p>Faça o upload de um currículo (PDF, DOCX) para que a IA analise e extraia as informações.</p>
     </div>
-    <h1>Analisador de Currículos</h1>
-    <p class="subtitle">Faça o upload de um currículo para extrair automaticamente informações importantes.</p>
-    <form method="post" enctype="multipart/form-data">
+
+    <form method="post" enctype="multipart/form-data" class="upload-form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit"><i class="fa-solid fa-cogs"></i> Enviar e Processar</button>
+        <div class="file-input-wrapper">
+            <input type="file" name="curriculo_original" required id="id_curriculo" class="file-input" accept=".pdf,.docx">
+            <label for="id_curriculo" class="file-input-label">
+                <i class="fa-solid fa-file-import"></i>
+                <span class="file-input-text">Clique para escolher um arquivo...</span>
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-paper-plane"></i> Enviar para Análise
+        </button>
     </form>
+</div>
 {% endblock %}
