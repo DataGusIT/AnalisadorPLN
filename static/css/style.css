@@ -29,41 +29,25 @@
     --border-radius: 20px;
 }
 
-/* SUBSTITUA O BLOCO ANTIGO html[data-theme="dark"] POR ESTE NOVO BLOCO */
-
 html[data-theme="dark"] {
     /* Tema Escuro (Nova Paleta Sofisticada) */
     --background-color: #0d1117;
-    /* Fundo: Azul-marinho muito escuro, quase preto */
     --container-bg: #161b22;
-    /* Container principal: Um tom acima do fundo */
     --card-bg: #21262d;
-    /* Cards e itens: Um pouco mais claro, para se destacar */
     --text-color: #c9d1d9;
-    /* Texto principal: Cinza claro, não branco puro */
     --secondary-text-color: #8b949e;
-    /* Texto secundário: Cinza médio */
     --border-color: #30363d;
-    /* Bordas: Sutil, para separar elementos */
     --accent-color: #58a6ff;
-    /* Cor de destaque: Azul vibrante */
     --accent-color-hover: #79c0ff;
-    /* Cor de destaque (hover): Azul mais claro */
     --header-bg: rgba(22, 27, 34, 0.7);
-    /* Fundo do header com transparência */
     --hover-bg: #1f242c;
-    /* Fundo para hover em links e botões */
     --tag-bg: rgba(56, 139, 253, 0.15);
-    /* Fundo de tags (competências, etc.) com transparência */
     --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     --secondary-btn-bg: #30363d;
     --secondary-btn-hover-bg: #484f58;
     --secondary-btn-text-color: #c9d1d9;
 }
 
-/* Aproveitando, vamos garantir que a cor da tag de competência
-   também use a variável de cor de destaque para um visual mais coeso.
-*/
 html[data-theme="dark"] .skill-tag {
     color: var(--accent-color);
 }
@@ -96,19 +80,16 @@ body {
 
 /* --- Cabeçalho --- */
 header {
-    /* Estado inicial: transparente e sem borda */
     background-color: transparent;
     border-bottom: 1px solid transparent;
     padding: 0 40px;
     position: sticky;
     top: 0;
     z-index: 1000;
-    /* Adiciona uma transição suave para todas as mudanças */
     transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
 }
 
 header.scrolled {
-    /* Estado ao rolar a página: ganha cor, desfoque e borda */
     background-color: var(--header-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
@@ -116,7 +97,6 @@ header.scrolled {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Adiciona uma sombra mais apropriada para o tema escuro */
 html[data-theme="dark"] header.scrolled {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
@@ -196,7 +176,6 @@ header nav a.nav-link.active {
     padding: 45px;
     border: 1px solid var(--border-color);
     position: relative;
-    /* ADICIONE ESTA LINHA */
 }
 
 /* --- Rodapé --- */
@@ -279,16 +258,11 @@ footer {
 }
 
 .modal-content {
-    /* Efeito de vidro fosco (Glassmorphism) */
     background-color: var(--header-bg);
-    /* Usa o mesmo fundo translúcido do header */
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--border-color);
-    /* Adiciona uma borda sutil para definição */
-
     color: var(--text-color);
-    /* Garante que o texto use a cor do tema */
     padding: 40px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -361,7 +335,6 @@ footer {
 
 .btn-delete {
     background-color: transparent;
-    /* Alterado de #fff para transparent */
     color: var(--delete-color);
     border: 1px solid var(--delete-color);
 }
@@ -778,87 +751,6 @@ footer {
     background-color: #6c757d;
 }
 
-/* --- Responsividade --- */
-@media (max-width: 768px) {
-    header {
-        padding: 0 20px;
-    }
-
-    header .nav-container {
-        height: 60px;
-    }
-
-    header nav {
-        display: none;
-    }
-
-    .main-container {
-        margin: 25px auto;
-        padding: 0 15px;
-    }
-
-    .content-box {
-        padding: 25px;
-    }
-
-    /* ADICIONE ESTA NOVA REGRA ABAIXO */
-    .upload-section {
-        margin-top: 50px;
-        /* Cria um espaço entre os botões e o conteúdo */
-    }
-
-    .details-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .history-table thead {
-        display: none;
-    }
-
-    .history-table,
-    .history-table tbody,
-    .history-table tr,
-    .history-table td {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .history-table tr {
-        margin-bottom: 15px;
-        border: 1px solid var(--border-color);
-        border-radius: 15px;
-        overflow: hidden;
-    }
-
-    .history-table td {
-        border: none;
-        border-bottom: 1px solid #eee;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px;
-    }
-
-    .history-table td:last-child {
-        border-bottom: none;
-    }
-
-    .history-table td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        margin-right: 10px;
-        color: var(--text-color);
-    }
-
-    .alerts-container {
-        width: auto;
-        left: 20px;
-        right: 20px;
-        top: 75px;
-    }
-}
-
 .btn-history {
     position: absolute;
     top: 30px;
@@ -870,7 +762,6 @@ footer {
     padding: 8px 15px;
     border-radius: 25px;
     background-color: var(--card-bg);
-    /* Usa a cor de fundo dos cards */
     border: 1px solid var(--border-color);
     transition: all var(--transition-speed) ease;
     display: inline-flex;
@@ -882,9 +773,7 @@ footer {
 .btn-history:hover {
     color: var(--text-color);
     background-color: var(--hover-bg);
-    /* Usa a cor de hover do tema */
     border-color: var(--secondary-text-color);
-    /* Usa uma cor de borda mais destacada no hover */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
@@ -894,13 +783,9 @@ footer {
     top: 25px;
     right: 25px;
     z-index: 10;
-
-    /* Estilo do ícone */
     font-size: 1.2rem;
     text-decoration: none;
     color: var(--secondary-text-color);
-
-    /* Efeito de botão circular */
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -910,19 +795,14 @@ footer {
     transition: all var(--transition-speed) ease;
 }
 
-/* Efeito ao passar o mouse por cima (AGORA COM VARIÁVEIS) */
 .btn-settings:hover {
     color: var(--text-color);
-    /* Usa a cor de texto do tema */
     background-color: var(--hover-bg);
-    /* Usa a cor de hover do tema */
     transform: rotate(45deg);
-    /* Gira a engrenagem */
 }
 
-
 /* ========================================= */
-/* ===== ESTILOS DO THEME TOGGLE (NOVO) ==== */
+/* ===== ESTILOS DO THEME TOGGLE =========== */
 /* ========================================= */
 
 .nav-controls {
@@ -957,7 +837,6 @@ footer {
     right: 0;
     bottom: 0;
     background-color: var(--accent-color);
-    /* Cor para tema claro */
     -webkit-transition: 0.4s;
     transition: 0.4s;
     z-index: 0;
@@ -978,7 +857,6 @@ footer {
 
 input:checked+.slider {
     background-color: #161b22;
-    /* Cor para tema escuro */
 }
 
 input:focus+.slider {
@@ -1258,13 +1136,11 @@ input:checked+.slider .stars {
     max-width: 600px;
     margin: 0 auto;
     text-align: left;
-    /* Alinha o conteúdo do formulário à esquerda */
 }
 
 .form-fields-grid {
     display: grid;
     grid-template-columns: 1fr;
-    /* Uma coluna por padrão */
     gap: 15px;
     background-color: var(--card-bg);
     padding: 30px;
@@ -1275,7 +1151,6 @@ input:checked+.slider .stars {
 .form-actions-footer {
     display: flex;
     justify-content: flex-end;
-    /* Alinha o botão à direita */
     margin-top: 30px;
 }
 
@@ -1295,17 +1170,14 @@ input:checked+.slider .stars {
 .form-group.checkbox-group label {
     position: relative;
     padding-left: 38px;
-    /* Espaço para a "caixa" */
     cursor: pointer;
     font-size: 1.05em;
     color: var(--text-color);
     display: flex;
     align-items: center;
     user-select: none;
-    /* Impede a seleção do texto do label */
 }
 
-/* A "caixa" do checkbox */
 .form-group.checkbox-group label::before {
     content: '';
     position: absolute;
@@ -1320,10 +1192,8 @@ input:checked+.slider .stars {
     transition: all 0.2s ease-in-out;
 }
 
-/* O ícone de "check" (escondido por padrão) */
 .form-group.checkbox-group label::after {
     content: '\f00c';
-    /* Código do ícone de check do Font Awesome */
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
     position: absolute;
@@ -1333,37 +1203,29 @@ input:checked+.slider .stars {
     font-size: 16px;
     color: white;
     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    /* Animação com "pulo" */
 }
 
-/* -- ESTADOS DO CHECKBOX -- */
-
-/* Hover (não marcado) */
 .form-group.checkbox-group input[type="checkbox"]:not(:checked)+label:hover::before {
     border-color: var(--accent-color);
 }
 
-/* Marcado */
 .form-group.checkbox-group input[type="checkbox"]:checked+label::before {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
 }
 
-/* Animação do check aparecendo */
 .form-group.checkbox-group input[type="checkbox"]:checked+label::after {
     transform: translateY(-50%) scale(1);
 }
 
-/* Foco para acessibilidade */
 .form-group.checkbox-group input[type="checkbox"]:focus-visible+label::before {
     box-shadow: 0 0 0 3px var(--accent-color-hover);
 }
 
 /* ======================================================= */
-/* ===== PÁGINA DE RESULTADO DA EXTRAÇÃO (NOVO DESIGN) ===== */
+/* ===== PÁGINA DE RESULTADO DA EXTRAÇÃO ================ */
 /* ======================================================= */
 
-/* Card para o título do documento */
 .document-title-card {
     background-color: var(--card-bg);
     padding: 20px 30px;
@@ -1382,15 +1244,12 @@ input:checked+.slider .stars {
     gap: 12px;
 }
 
-/* Grid responsivo para os cards de entidades */
 .entity-groups-grid {
     display: grid;
-    /* Cria colunas que se adaptam, com um tamanho mínimo de 350px */
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 25px;
 }
 
-/* Estilo de cada card de grupo de entidade */
 .entity-group-card {
     background-color: var(--card-bg);
     padding: 30px;
@@ -1401,7 +1260,6 @@ input:checked+.slider .stars {
     flex-direction: column;
 }
 
-/* Título de cada card (ex: "Parte do Contrato") */
 .entity-group-title {
     margin: 0 0 20px 0;
     padding-bottom: 15px;
@@ -1409,10 +1267,8 @@ input:checked+.slider .stars {
     font-size: 1.1em;
     font-weight: 600;
     color: var(--accent-color);
-    /* Usa a cor de destaque para o título */
 }
 
-/* Lista de textos extraídos dentro de cada card */
 .entity-group-list {
     list-style-type: none;
     padding: 0;
@@ -1421,7 +1277,6 @@ input:checked+.slider .stars {
 
 .entity-group-list li {
     background-color: var(--background-color);
-    /* Fundo sutilmente diferente do card */
     padding: 12px 15px;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -1430,7 +1285,6 @@ input:checked+.slider .stars {
     font-size: 0.95em;
     line-height: 1.6;
     word-break: break-word;
-    /* Garante que textos longos não quebrem o layout */
 }
 
 .entity-group-list li:last-child {
@@ -1444,7 +1298,6 @@ input:checked+.slider .stars {
 .menu-toggle,
 .close-menu-btn {
     display: none;
-    /* Escondidos por padrão (desktop) */
     background: none;
     border: none;
     cursor: pointer;
@@ -1452,50 +1305,51 @@ input:checked+.slider .stars {
     font-size: 1.5rem;
     padding: 10px;
     z-index: 1100;
-    /* Garante que fiquem acima de outros elementos */
 }
 
-@media (max-width: 768px) {
+/* ========================================= */
+/* ===== RESPONSIVIDADE ==================== */
+/* ========================================= */
 
-    /* Mostra o botão hambúrguer no mobile */
-    .menu-toggle {
-        display: block;
+@media (max-width: 768px) {
+    header {
+        padding: 0 20px;
     }
 
-    /* Esconde a navegação principal no mobile (regra antiga) */
+    header .nav-container {
+        height: 60px;
+    }
+
     header nav {
         display: none;
     }
 
-    /* VERSÃO NOVA - TELA CHEIA */
+    .menu-toggle {
+        display: block;
+    }
+
     header nav.mobile-nav-active {
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* Adicionado para centralizar horizontalmente */
         justify-content: center;
-        /* Adicionado para centralizar verticalmente */
         position: fixed;
         top: 0;
         right: 0;
         width: 100%;
-        /* Alterado para ocupar a tela inteira */
         height: 100%;
-        /* Já estava 100% */
         background-color: var(--container-bg);
         padding: 20px;
         z-index: 3001;
         transform: translateX(100%);
         animation: slideIn 0.4s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
         box-shadow: none;
-        /* Removido pois não faz sentido em tela cheia */
     }
 
     html[data-theme="dark"] header nav.mobile-nav-active {
         box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
     }
 
-    /* Mostra o botão de fechar dentro do menu mobile */
     header nav .close-menu-btn {
         display: block;
         position: absolute;
@@ -1503,47 +1357,30 @@ input:checked+.slider .stars {
         right: 15px;
     }
 
-    /* Estilo dos links dentro do menu mobile */
     header nav.mobile-nav-active a.nav-link {
         font-size: 1.3em;
-        /* Ajustado para caber sem quebrar linha */
         padding: 20px 0;
         width: 100%;
-        /* Ocupa a largura total do espaço disponível */
         max-width: 400px;
-        /* Um max-width um pouco maior pode ajudar */
         display: flex;
-        /* Garante que ícone e texto fiquem na mesma linha */
         align-items: center;
-        /* Alinha verticalmente ícone e texto */
         justify-content: center;
-        /* CENTRALIZA horizontalmente o ícone e texto dentro do link */
         white-space: nowrap;
-        /* IMPEDE a quebra de linha do texto */
         overflow: hidden;
-        /* Esconde qualquer texto que ultrapasse (se o font-size for grande demais) */
         text-overflow: ellipsis;
-        /* Adiciona '...' se o texto for muito longo */
         text-align: center;
-        /* Alinha o texto individualmente caso display:flex não faça tudo */
         margin: 10px auto;
-        /* Adiciona margem vertical e centraliza o próprio bloco do link */
         border-bottom: none;
-        /* Mantenha sem borda */
     }
 
     header nav.mobile-nav-active a.nav-link i {
         font-size: 1.1em;
-        /* Um pouco menor ou igual ao texto para harmonia */
         margin-right: 10px;
-        /* Espaço entre ícone e texto */
         flex-shrink: 0;
-        /* Impede que o ícone diminua */
     }
 
     header nav.mobile-nav-active a.nav-link.active {
         background-color: transparent;
-        /* Remove fundo da classe active */
         font-weight: 700;
     }
 
@@ -1551,7 +1388,6 @@ input:checked+.slider .stars {
         animation: slideOut 0.4s forwards ease-out;
     }
 
-    /* Animação para o menu deslizar da direita para a esquerda */
     @keyframes slideIn {
         from {
             transform: translateX(100%);
@@ -1561,17 +1397,199 @@ input:checked+.slider .stars {
             transform: translateX(0);
         }
     }
-}
 
-/* Adicione esta nova animação no final do seu arquivo CSS */
-@keyframes slideOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
     }
 
-    to {
-        transform: translateX(100%);
-        opacity: 0;
+    .main-container {
+        margin: 25px auto;
+        padding: 0 15px;
+    }
+
+    .content-box {
+        padding: 25px;
+    }
+
+    .upload-section {
+        margin-top: 50px;
+    }
+
+    .upload-header h1 {
+        font-size: 1.8em;
+    }
+
+    .upload-header .title-icon {
+        font-size: 2em;
+    }
+
+    .file-input-label {
+        padding: 30px 20px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .file-input-label i {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .btn-history {
+        top: 15px;
+        left: 15px;
+        font-size: 0.85em;
+        padding: 6px 12px;
+    }
+
+    .btn-settings {
+        top: 15px;
+        right: 15px;
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .details-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .details-header h1 {
+        font-size: 1.4em;
+        gap: 10px;
+    }
+
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    .header-actions .btn {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .document-title-card {
+        padding: 15px 20px;
+    }
+
+    .document-title-card h3 {
+        font-size: 1em;
+        gap: 8px;
+    }
+
+    .document-title-card h3 i {
+        font-size: 1.2em;
+    }
+
+    .entity-groups-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .entity-group-card {
+        padding: 20px;
+    }
+
+    .entity-group-title {
+        font-size: 1em;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+    }
+
+    .entity-group-list li {
+        padding: 10px 12px;
+        font-size: 0.9em;
+        margin-bottom: 8px;
+    }
+
+    .history-table thead {
+        display: none;
+    }
+
+    .history-table,
+    .history-table tbody,
+    .history-table tr,
+    .history-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .history-table tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .history-table td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .history-table td:last-child {
+        border-bottom: none;
+    }
+
+    .history-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-right: 10px;
+        color: var(--text-color);
+    }
+
+    .alerts-container {
+        width: auto;
+        left: 20px;
+        right: 20px;
+        top: 75px;
+    }
+
+    .modal {
+        width: 95%;
+    }
+
+    .modal-content {
+        padding: 30px 20px;
+    }
+
+    .settings-header h1 {
+        font-size: 1.8em;
+    }
+
+    .settings-header .title-icon-alt {
+        font-size: 2em;
+    }
+
+    .form-fields-grid {
+        padding: 20px;
+    }
+
+    .form-actions-footer {
+        justify-content: stretch;
+    }
+
+    .form-actions-footer .btn {
+        width: 100%;
     }
 }
