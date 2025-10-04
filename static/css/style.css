@@ -279,7 +279,16 @@ footer {
 }
 
 .modal-content {
-    background: white;
+    /* Efeito de vidro fosco (Glassmorphism) */
+    background-color: var(--header-bg);
+    /* Usa o mesmo fundo translúcido do header */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--border-color);
+    /* Adiciona uma borda sutil para definição */
+
+    color: var(--text-color);
+    /* Garante que o texto use a cor do tema */
     padding: 40px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -351,7 +360,8 @@ footer {
 }
 
 .btn-delete {
-    background-color: #fff;
+    background-color: transparent;
+    /* Alterado de #fff para transparent */
     color: var(--delete-color);
     border: 1px solid var(--delete-color);
 }
@@ -791,6 +801,12 @@ footer {
         padding: 25px;
     }
 
+    /* ADICIONE ESTA NOVA REGRA ABAIXO */
+    .upload-section {
+        margin-top: 50px;
+        /* Cria um espaço entre os botões e o conteúdo */
+    }
+
     .details-grid {
         grid-template-columns: 1fr;
     }
@@ -871,6 +887,37 @@ footer {
     /* Usa uma cor de borda mais destacada no hover */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.btn-settings {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    z-index: 10;
+
+    /* Estilo do ícone */
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: var(--secondary-text-color);
+
+    /* Efeito de botão circular */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    transition: all var(--transition-speed) ease;
+}
+
+/* Efeito ao passar o mouse por cima (AGORA COM VARIÁVEIS) */
+.btn-settings:hover {
+    color: var(--text-color);
+    /* Usa a cor de texto do tema */
+    background-color: var(--hover-bg);
+    /* Usa a cor de hover do tema */
+    transform: rotate(45deg);
+    /* Gira a engrenagem */
 }
 
 /* ========================================= */
@@ -1002,4 +1049,218 @@ input:checked+.slider i.fa-moon {
     /* Cria um espaço antes do card principal */
     padding: 0 5px;
     /* Um pequeno respiro nas laterais */
+}
+
+/* ========================================= */
+/* ===== PÁGINA DE CONFIGURAÇÕES =========== */
+/* ========================================= */
+
+.settings-container {
+    text-align: center;
+}
+
+.settings-header {
+    margin-bottom: 40px;
+}
+
+.settings-header .title-icon-alt {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.settings-header h1 {
+    font-size: 2.2em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.settings-header p {
+    max-width: 500px;
+    margin: 0 auto;
+    color: var(--secondary-text-color);
+    line-height: 1.6;
+}
+
+.settings-form {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+    /* Alinha o conteúdo do formulário à esquerda */
+}
+
+.form-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Uma coluna por padrão */
+    gap: 15px;
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.form-actions-footer {
+    display: flex;
+    justify-content: flex-end;
+    /* Alinha o botão à direita */
+    margin-top: 30px;
+}
+
+/* Estilização customizada para Checkboxes */
+.form-group.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.form-group.checkbox-group input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+}
+
+.form-group.checkbox-group label {
+    position: relative;
+    padding-left: 38px;
+    /* Espaço para a "caixa" */
+    cursor: pointer;
+    font-size: 1.05em;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    user-select: none;
+    /* Impede a seleção do texto do label */
+}
+
+/* A "caixa" do checkbox */
+.form-group.checkbox-group label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-color);
+    background-color: var(--container-bg);
+    border-radius: 7px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* O ícone de "check" (escondido por padrão) */
+.form-group.checkbox-group label::after {
+    content: '\f00c';
+    /* Código do ícone de check do Font Awesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    font-size: 16px;
+    color: white;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Animação com "pulo" */
+}
+
+/* -- ESTADOS DO CHECKBOX -- */
+
+/* Hover (não marcado) */
+.form-group.checkbox-group input[type="checkbox"]:not(:checked)+label:hover::before {
+    border-color: var(--accent-color);
+}
+
+/* Marcado */
+.form-group.checkbox-group input[type="checkbox"]:checked+label::before {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+/* Animação do check aparecendo */
+.form-group.checkbox-group input[type="checkbox"]:checked+label::after {
+    transform: translateY(-50%) scale(1);
+}
+
+/* Foco para acessibilidade */
+.form-group.checkbox-group input[type="checkbox"]:focus-visible+label::before {
+    box-shadow: 0 0 0 3px var(--accent-color-hover);
+}
+
+/* ======================================================= */
+/* ===== PÁGINA DE RESULTADO DA EXTRAÇÃO (NOVO DESIGN) ===== */
+/* ======================================================= */
+
+/* Card para o título do documento */
+.document-title-card {
+    background-color: var(--card-bg);
+    padding: 20px 30px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+}
+
+.document-title-card h3 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Grid responsivo para os cards de entidades */
+.entity-groups-grid {
+    display: grid;
+    /* Cria colunas que se adaptam, com um tamanho mínimo de 350px */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+/* Estilo de cada card de grupo de entidade */
+.entity-group-card {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Título de cada card (ex: "Parte do Contrato") */
+.entity-group-title {
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--accent-color);
+    /* Usa a cor de destaque para o título */
+}
+
+/* Lista de textos extraídos dentro de cada card */
+.entity-group-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.entity-group-list li {
+    background-color: var(--background-color);
+    /* Fundo sutilmente diferente do card */
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    color: var(--secondary-text-color);
+    font-size: 0.95em;
+    line-height: 1.6;
+    word-break: break-word;
+    /* Garante que textos longos não quebrem o layout */
+}
+
+.entity-group-list li:last-child {
+    margin-bottom: 0;
 }

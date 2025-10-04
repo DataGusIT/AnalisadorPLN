@@ -4,36 +4,33 @@
 {% block title %}Analisador de Currículos{% endblock %}
 
 {% block content %}
-<!-- NOVO CONTAINER PAI PARA OS BOTÕES DE AÇÃO -->
-<div class="page-actions-container">
     <a href="{% url 'core:historico_candidatos' %}" class="btn-history">
         <i class="fa-solid fa-clock-rotate-left"></i> Histórico
     </a>
-    <a href="{% url 'core:configuracoes' %}" class="settings-icon-link" title="Configurações">
+
+    <a href="{% url 'core:configuracoes' %}" class="btn-settings" title="Configurações">
         <i class="fa-solid fa-gear"></i>
     </a>
-</div>
 
-<!-- O container principal agora não tem mais nenhum botão/ícone dentro dele -->
-<div class="upload-section">
-    <div class="upload-header">
-        <i class="fa-solid fa-cloud-arrow-up title-icon"></i>
-        <h1>Analisador de Currículos</h1>
-        <p>Faça o upload de um currículo (PDF, DOCX) para que a IA analise e extraia as informações.</p>
-    </div>
-
-    <form method="post" enctype="multipart/form-data" class="upload-form">
-        {% csrf_token %}
-        <div class="file-input-wrapper">
-            <input type="file" name="curriculo_original" required id="id_curriculo" class="file-input" accept=".pdf,.docx">
-            <label for="id_curriculo" class="file-input-label">
-                <i class="fa-solid fa-file-import"></i>
-                <span class="file-input-text">Clique para escolher um arquivo...</span>
-            </label>
+    <div class="upload-section">
+        <div class="upload-header">
+            <i class="fa-solid fa-cloud-arrow-up title-icon"></i>
+            <h1>Analisador de Currículos</h1>
+            <p>Faça o upload de um currículo (PDF, DOCX) para que a IA analise e extraia as informações.</p>
         </div>
-        <button type="submit" class="btn btn-primary">
-            <i class="fa-solid fa-paper-plane"></i> Enviar para Análise
-        </button>
-    </form>
-</div>
+
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+            <div class="file-input-wrapper">
+                <input type="file" name="curriculo_original" required id="id_curriculo" class="file-input" accept=".pdf,.docx">
+                <label for="id_curriculo" class="file-input-label">
+                    <i class="fa-solid fa-file-import"></i>
+                    <span class="file-input-text">Clique para escolher um arquivo...</span>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-paper-plane"></i> Enviar para Análise
+            </button>
+        </form>
+    </div>
 {% endblock %}
