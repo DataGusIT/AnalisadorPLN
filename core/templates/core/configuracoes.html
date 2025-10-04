@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configurações de Extração{% endblock %}
+
+{% block content %}
+<a href="{% url 'core:upload_curriculo' %}" class="btn-history">
+    <i class="fa-solid fa-arrow-left"></i> Voltar para o Analisador
+</a>
+
+<div class="upload-section">
+    <div class="upload-header">
+        <i class="fa-solid fa-cogs title-icon"></i>
+        <h1>Configurações de Extração</h1>
+        <p>Selecione quais seções dos currículos você deseja que a IA analise e extraia.</p>
+    </div>
+
+    <form method="post" class="settings-form">
+        {% csrf_token %}
+        
+        <div class="form-fields">
+            {{ form.as_p }}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-save"></i> Salvar Configurações
+        </button>
+    </form>
+</div>
+{% endblock %}

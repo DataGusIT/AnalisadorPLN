@@ -4,10 +4,17 @@
 {% block title %}Analisador de Currículos{% endblock %}
 
 {% block content %}
-<a href="{% url 'core:historico_candidatos' %}" class="btn-history">
-    <i class="fa-solid fa-clock-rotate-left"></i> Histórico
-</a>
+<!-- NOVO CONTAINER PAI PARA OS BOTÕES DE AÇÃO -->
+<div class="page-actions-container">
+    <a href="{% url 'core:historico_candidatos' %}" class="btn-history">
+        <i class="fa-solid fa-clock-rotate-left"></i> Histórico
+    </a>
+    <a href="{% url 'core:configuracoes' %}" class="settings-icon-link" title="Configurações">
+        <i class="fa-solid fa-gear"></i>
+    </a>
+</div>
 
+<!-- O container principal agora não tem mais nenhum botão/ícone dentro dele -->
 <div class="upload-section">
     <div class="upload-header">
         <i class="fa-solid fa-cloud-arrow-up title-icon"></i>

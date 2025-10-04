@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Detalhes de {{ candidato.nome }}{% endblock %}
+{% block title %}Detalhes de {{ candidato.nome_completo|default:'Candidato' }}{% endblock %}
 
 {% block content %}
 <div class="details-header">
@@ -16,6 +16,7 @@
 </div>
 
 <div class="details-grid">
+    <!-- Card de Informações Pessoais (sem alteração) -->
     <div class="detail-card">
         <h3><i class="fa-solid fa-id-card"></i> Informações Pessoais</h3>
         <p><strong>Nome:</strong> {{ candidato.nome_completo|default:"Não encontrado" }}</p>
@@ -23,6 +24,7 @@
         <p><strong>Telefone:</strong> {{ candidato.telefone|default:"Não encontrado" }}</p>
     </div>
 
+    <!-- Card de Competências (sem alteração) -->
     <div class="detail-card">
         <h3><i class="fa-solid fa-star"></i> Competências</h3>
         {% if habilidades_lista %}
@@ -36,6 +38,19 @@
         {% endif %}
     </div>
 
+    <!-- NOVO CARD: Formação Acadêmica -->
+    <div class="detail-card full-width">
+        <h3><i class="fa-solid fa-graduation-cap"></i> Formação Acadêmica</h3>
+        {% if candidato.formacao_academica %}
+            <div class="experience-text">
+                <p>{{ candidato.formacao_academica|linebreaksbr }}</p>
+            </div>
+        {% else %}
+            <p class="empty-text">Nenhuma formação acadêmica extraída.</p>
+        {% endif %}
+    </div>
+
+    <!-- Card de Experiência Profissional (sem alteração) -->
     <div class="detail-card full-width">
         <h3><i class="fa-solid fa-briefcase"></i> Experiência Profissional</h3>
         {% if candidato.experiencia %}
@@ -44,6 +59,18 @@
             </div>
         {% else %}
             <p class="empty-text">Nenhuma experiência extraída.</p>
+        {% endif %}
+    </div>
+    
+    <!-- NOVO CARD: Idiomas -->
+    <div class="detail-card full-width">
+        <h3><i class="fa-solid fa-language"></i> Idiomas</h3>
+        {% if candidato.idiomas %}
+            <div class="experience-text">
+                <p>{{ candidato.idiomas|linebreaksbr }}</p>
+            </div>
+        {% else %}
+            <p class="empty-text">Nenhum idioma extraído.</p>
         {% endif %}
     </div>
 </div>

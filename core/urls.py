@@ -10,4 +10,5 @@ urlpatterns = [
     path('candidato/<int:candidato_id>/', views.detalhe_candidato, name='detalhe_candidato'),
     path('historico/', views.historico_candidatos, name='historico_candidatos'),
     path('candidato/<int:candidato_id>/delete/', views.delete_candidato, name='delete_candidato'), # NOVA LINHA
+    path('configuracoes/', views.configuracao_view, name='configuracoes'),
 ]

@@ -372,8 +372,10 @@ footer {
 
 /* --- Seção de Upload --- */
 .upload-section {
+    position: relative;
     text-align: center;
     padding: 20px 0;
+    padding-top: 20px;
 }
 
 .upload-header .title-icon {
@@ -962,4 +964,42 @@ input:checked+.slider i.fa-moon {
         display: none;
         /* Mantém o menu principal escondido em mobile */
     }
+}
+
+/* Posiciona o link do ícone no canto superior direito */
+.settings-icon-link {
+    position: absolute;
+    top: 25px;
+    /* Distância do topo */
+    right: 25px;
+    /* Distância da direita */
+
+    /* Estilo do ícone */
+    font-size: 1.6rem;
+    /* Tamanho do ícone */
+    color: #8a93a2;
+    /* Cor cinza (ajuste para combinar com seu tema) */
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Efeito ao passar o mouse por cima */
+.settings-icon-link:hover {
+    color: #ffffff;
+    /* Cor ao passar o mouse (para tema escuro) */
+    transform: rotate(45deg);
+    /* Gira a engrenagem */
+}
+
+/* O novo container que usa Flexbox para alinhar tudo */
+.page-actions-container {
+    display: flex;
+    justify-content: space-between;
+    /* Joga um item para cada ponta */
+    align-items: center;
+    /* Alinha verticalmente no centro */
+    margin-bottom: 20px;
+    /* Cria um espaço antes do card principal */
+    padding: 0 5px;
+    /* Um pequeno respiro nas laterais */
 }

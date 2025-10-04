@@ -10,75 +10,66 @@ from django.contrib import messages
 # Carrega o modelo do spaCy
 nlp = spacy.load("pt_core_news_lg")
 
-# --- A NOVA E PODEROSA FUNÇÃO DE PROCESSAMENTO ---
 def processar_documento_com_spacy(texto):
-    """
-    Usa NER, Matcher com regras customizadas e Regex para extrair
-    entidades de forma mais inteligente e contextual de documentos.
-    """
     doc = nlp(texto)
+    entidades = []
+    spans_ocupados = []
+
+    # LISTA DE EXCLUSÃO ATUALIZADA com o ruído que encontramos.
+    stop_list = {
+        "contratante", "contratada", "cláusula", "cláusula primeira", "objeto",
+        "preço", "prazo", "serviços", "desenvolvimento", "sr", "sra", "sr(a", "brasileiro(a)",
+        "testemunhas", "contrato de prestação de serviços"
+    }
+
+    def adicionar_entidade(span, tipo, is_ner=False):
+        for inicio, fim in spans_ocupados:
+            if span.start_char >= inicio and span.end_char <= fim: return
+            if span.start_char < fim and span.end_char > inicio: return
+        
+        texto_limpo = span.text.strip()
+        if is_ner and texto_limpo.lower() in stop_list: return
+        
+        # Ignora entidades muito curtas ou que são apenas pontuação
+        if len(texto_limpo) < 2 or texto_limpo in ".,:;": return
+
+        entidades.append({'texto': texto_limpo, 'tipo': tipo})
+        spans_ocupados.append((span.start_char, span.end_char))
+
+    # --- CAMADA 1: Regex (Continua igual, é muito confiável) ---
+    for match in re.finditer(r"\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}", doc.text):
+        span = doc.char_span(match.start(), match.end(), label="CNPJ")
+        if span: adicionar_entidade(span, "Documento (CNPJ)")
+    for match in re.finditer(r"\d{3}\.\d{3}\.\d{3}-\d{2}", doc.text):
+        span = doc.char_span(match.start(), match.end(), label="CPF")
+        if span: adicionar_entidade(span, "Documento (CPF)")
+    for match in re.finditer(r"R\$\s?[\d\.,]+", doc.text):
+        span = doc.char_span(match.start(), match.end(), label="VALOR")
+        if span: adicionar_entidade(span, "Valor Monetário")
+
+    # --- CAMADA 2: Regras de Contexto (O GRANDE APRIMORAMENTO) ---
     matcher = Matcher(nlp.vocab)
-
-    # --- Padrões de Expressão Regular (Regex) ---
-    # Padrão para encontrar CNPJ (XX.XXX.XXX/XXXX-XX)
-    padrao_cnpj = [{"TEXT": {"REGEX": r"\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}"}}]
-    # Padrão para encontrar CPF (XXX.XXX.XXX-XX)
-    padrao_cpf = [{"TEXT": {"REGEX": r"\d{3}\.\d{3}\.\d{3}-\d{2}"}}]
-    # Padrão para encontrar valores em Reais (R$ X.XXX,XX)
-    padrao_valor = [{"TEXT": "R$"}, {"IS_PUNCT": True, "OP": "?"}, {"LIKE_NUM": True}]
-
-    # --- Padrões baseados em Tokens para encontrar as partes ---
-    # Padrão aprimorado: procura pela palavra-chave e captura o texto na mesma linha.
-    # [contratante/contratada] : [qualquer texto até a quebra de linha]
-    padrao_contratante = [
-        {"LOWER": "contratante"},
-        {"IS_PUNCT": True, "OP": "?"}, # Pega os dois pontos ":"
-        {"ENT_TYPE": {"IN": ["ORG", "PER"]}, "OP": "+"} # Pega organizações ou pessoas
-    ]
-    padrao_contratada = [
-        {"LOWER": "contratada"},
+    # PADRÃO "GULOSO": Agora inclui Adjetivos (ADJ) e Adposições (ADP, como "de", "da").
+    # Isso permite capturar "TechSolutions Inovação LTDA" e "João da Silva Consultoria".
+    padrao_parte = [
+        {"LOWER": {"IN": ["contratante", "contratada"]}},
         {"IS_PUNCT": True, "OP": "?"},
-        {"ENT_TYPE": {"IN": ["ORG", "PER"]}, "OP": "+"}
+        {"POS": {"IN": ["PROPN", "NOUN", "PUNCT", "ADJ", "ADP"]}, "OP": "+"}
     ]
-
-    # Adiciona os padrões ao Matcher
-    matcher.add("CNPJ", [padrao_cnpj])
-    matcher.add("CPF", [padrao_cpf])
-    matcher.add("VALOR", [padrao_valor])
-    matcher.add("CONTRATANTE", [padrao_contratante])
-    matcher.add("CONTRATADA", [padrao_contratada])
-
-    matches = matcher(doc)
-    entidades_extraidas = []
-    textos_ja_adicionados = set() # Para evitar duplicatas
-
-    # Helper para limpar o texto extraído das partes
-    def limpar_texto_chave(texto):
-        return re.sub(r'^(contratante|contratada)\s*[:\-]?\s*', '', texto, flags=re.IGNORECASE).strip()
-
-    # Processa os resultados do Matcher (nossas regras customizadas)
-    for match_id, start, end in matches:
-        regra_id_string = nlp.vocab.strings[match_id]
+    matcher.add("PARTE_CONTRATO", [padrao_parte])
+    
+    for match_id, start, end in matcher(doc):
         span = doc[start:end]
-        texto_entidade = span.text
+        texto_limpo = re.sub(r'^(contratante|contratada)\s*[:\-]?\s*', '', span.text, flags=re.IGNORECASE)
+        
+        char_start = span.text.find(texto_limpo) + span.start_char
+        char_end = char_start + len(texto_limpo)
+        span_limpo = doc.char_span(char_start, char_end, label="PARTE")
+        
+        if span_limpo and any(token.is_alpha for token in span_limpo):
+            adicionar_entidade(span_limpo, "Parte do Contrato")
 
-        tipo_entidade = ""
-        if regra_id_string in ["CONTRATANTE", "CONTRATADA"]:
-            tipo_entidade = "Parte do Contrato"
-            texto_entidade = limpar_texto_chave(texto_entidade)
-        elif regra_id_string == "CNPJ":
-            tipo_entidade = "Documento (CNPJ)"
-        elif regra_id_string == "CPF":
-            tipo_entidade = "Documento (CPF)"
-        elif regra_id_string == "VALOR":
-            tipo_entidade = "Valor Monetário"
-
-        if texto_entidade and texto_entidade not in textos_ja_adicionados:
-            entidades_extraidas.append({'texto': texto_entidade, 'tipo': tipo_entidade})
-            textos_ja_adicionados.add(texto_entidade)
-
-    # Processa as entidades genéricas do spaCy (NER)
-    # Apenas se não foram capturadas pelas nossas regras mais específicas
+    # --- CAMADA 3: IA Genérica (NER) para capturar o que sobrou ---
     labels_map = {
         "PER": "Pessoa",
         "LOC": "Local",
@@ -86,29 +77,25 @@ def processar_documento_com_spacy(texto):
         "DATE": "Data",
     }
     for entidade in doc.ents:
-        if entidade.text not in textos_ja_adicionados:
-            label = labels_map.get(entidade.label_)
-            if label:
-                entidades_extraidas.append({'texto': entidade.text, 'tipo': label})
-                textos_ja_adicionados.add(entidade.text)
+        label = labels_map.get(entidade.label_)
+        if label:
+            adicionar_entidade(entidade, label, is_ner=True)
 
-    return entidades_extraidas
-
+    return entidades
 
 # --- VIEW DE UPLOAD (ATUALIZADA) ---
 def upload_documento(request):
     if request.method == 'POST':
         form = DocumentoForm(request.POST, request.FILES)
         if form.is_valid():
-            documento_obj = form.save(commit=False)
-            documento_obj.titulo = documento_obj.arquivo_original.name
-            
+            documento_obj = form.save()
+
             caminho_arquivo = documento_obj.arquivo_original.path
             texto_extraido = extrair_texto_de_arquivo(caminho_arquivo)
-            
-            # Chama a nova função inteligente
+
             entidades = processar_documento_com_spacy(texto_extraido)
-            
+
+            documento_obj.titulo = documento_obj.arquivo_original.name
             documento_obj.texto_do_documento = texto_extraido
             documento_obj.entidades_extraidas = entidades
             documento_obj.save()
@@ -126,7 +113,6 @@ def resultado_extracao(request, documento_id):
     
     entidades_agrupadas = {}
     if documento.entidades_extraidas:
-        # Agrupa as entidades por tipo para facilitar a exibição
         for entidade in documento.entidades_extraidas:
             tipo = entidade.get('tipo', 'Outros')
             texto = entidade.get('texto')
