@@ -8,7 +8,7 @@ from spacy.matcher import Matcher
 from django.contrib import messages
 
 # Carrega o modelo do spaCy
-nlp = spacy.load("pt_core_news_lg")
+nlp = spacy.load("pt_core_news_sm")
 
 # Em extractor/views.py
 

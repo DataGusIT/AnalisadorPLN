@@ -11,7 +11,7 @@ import re
 from django.contrib import messages
 
 # Carregue o modelo do spaCy uma vez quando o servidor iniciar
-nlp = spacy.load("pt_core_news_lg")
+nlp = spacy.load("pt_core_news_sm") 
 
 # --- FUNÇÃO AUXILIAR MELHORADA PARA EXTRAIR TEXTO ---
 def extrair_texto_de_arquivo(caminho_arquivo):
