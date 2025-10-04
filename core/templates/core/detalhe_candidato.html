@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Candidato{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <div style="display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 50%; margin-bottom: 1rem; box-shadow: var(--shadow-lg);">
+            <i class="fa-solid fa-user-check" style="font-size: 2rem; color: white;"></i>
+        </div>
+        <h1>{{ candidato.nome_completo|default:"Candidato" }}</h1>
+        <p class="subtitle" style="margin-bottom: 0;">Análise concluída</p>
+    </div>
+
+    <div class="info-block">
+        <h2><i class="fa-solid fa-address-card"></i> Contato</h2>
+        <div style="background: var(--background-light); padding: 1.5rem; border-radius: 12px;">
+            <p><strong>Email:</strong> {{ candidato.email|default:"N/A" }}</p>
+            <p style="margin-bottom: 0;"><strong>Telefone:</strong> {{ candidato.telefone|default:"N/A" }}</p>
+        </div>
+    </div>
+
+    <div class="info-block">
+        <h2><i class="fa-solid fa-code"></i> Habilidades</h2>
+        {% if habilidades_lista %}
+            <ul class="skills-list">
+                {% for skill in habilidades_lista %}
+                    <li class="skill-tag">{{ skill }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="text-align: left;">Nenhuma habilidade identificada.</p>
+        {% endif %}
+    </div>
+
+    <div class="info-block">
+        <h2><i class="fa-solid fa-briefcase"></i> Experiência</h2>
+        <div class="full-text-display">{{ candidato.experiencia|default:"N/A"|linebreaksbr }}</div>
+    </div>
+
+    <a class="action-link" href="{% url 'upload_curriculo' %}">Analisar Outro</a>
+{% endblock %}

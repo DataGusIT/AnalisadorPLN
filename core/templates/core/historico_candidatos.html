@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Histórico de Currículos{% endblock %}
+
+{% block content %}
+    <div class="sub-nav">
+        <a href="{% url 'upload_curriculo' %}" class="sub-nav-link"><i class="fa-solid fa-plus"></i> Analisar Novo Currículo</a>
+    </div>
+    <h1>Histórico de Currículos</h1>
+    <p class="subtitle">Veja todos os currículos que já foram processados.</p>
+
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>Nome do Candidato</th>
+                <th>Email</th>
+                <th>Data do Upload</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidato in candidatos %}
+            <tr>
+                <td data-label="Nome">{{ candidato.nome_completo|default:"N/A" }}</td>
+                <td data-label="Email">{{ candidato.email|default:"N/A" }}</td>
+                <td data-label="Data">{{ candidato.data_de_upload|date:"d/m/Y H:i" }}</td>
+                <td class="actions-cell">
+                    <a href="{% url 'detalhe_candidato' candidato.id %}" class="btn-details">Ver Detalhes</a>
+                    <a href="#" class="btn-delete-link js-delete-btn" 
+                    data-url="{% url 'delete_candidato' candidato.id %}" 
+                    data-item-name="{{ candidato.nome_completo|default:'Candidato sem nome' }}">Excluir</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center;">Nenhum currículo foi analisado ainda.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

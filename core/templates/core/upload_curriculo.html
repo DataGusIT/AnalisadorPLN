@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Analisador de Currículos{% endblock %}
+
+{% block content %}
+    <div class="sub-nav">
+        <a href="{% url 'historico_candidatos' %}" class="sub-nav-link"><i class="fa-solid fa-list-ul"></i> Ver Histórico</a>
+    </div>
+    <h1>Analisador de Currículos</h1>
+    <p class="subtitle">Faça o upload de um currículo para extrair automaticamente informações importantes.</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit"><i class="fa-solid fa-cogs"></i> Enviar e Processar</button>
+    </form>
+{% endblock %}

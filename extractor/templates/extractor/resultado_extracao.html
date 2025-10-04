@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultado da Extração{% endblock %}
+
+{% block content %}
+    <h1>Resultado da Extração</h1>
+    <p>Documento: <strong>{{ documento.titulo }}</strong></p>
+
+    <div class="results-grid">
+        <div class="column">
+            <h2>Entidades Encontradas</h2>
+            {% for tipo, textos in entidades_agrupadas.items %}
+                <h3>{{ tipo }}</h3>
+                <ul>
+                    {% for texto in textos %}
+                        <li>{{ texto }}</li>
+                    {% endfor %}
+                </ul>
+            {% empty %}
+                <p style="text-align: left;">Nenhuma entidade foi encontrada.</p>
+            {% endfor %}
+        </div>
+        <div class="column">
+            <h2>Texto Completo</h2>
+            <div class="full-text-display">{{ documento.texto_do_documento }}</div>
+        </div>
+    </div>
+    <a class="action-link" href="{% url 'extractor:upload_documento' %}">Analisar outro documento</a>
+{% endblock %}

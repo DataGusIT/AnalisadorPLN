@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Analisador Inteligente{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="{% url 'upload_curriculo' %}" class="logo"><i class="fa-solid fa-brain"></i> Analisador IA</a>
+            <nav>
+                <a href="{% url 'upload_curriculo' %}" class="{% if request.resolver_match.app_name == 'core' %}active{% endif %}">Analisador de Currículos</a>
+                <a href="{% url 'extractor:upload_documento' %}" class="{% if request.resolver_match.app_name == 'extractor' %}active{% endif %}">Extrator de Documentos</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Container para mensagens de sucesso/erro -->
+    {% if messages %}
+    <div class="alerts-container">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            <span>{{ message }}</span>
+            <button class="close-btn">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="main-container">
+        <div class="content-box">
+            <main>
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; {% now "Y" %} Analisador Inteligente. Um projeto com Django, PostgreSQL & spaCy.</p>
+    </footer>
+
+    <!-- Modal de Exclusão (escondido por padrão) -->
+    <div id="modalBackdrop" class="modal-backdrop hidden"></div>
+    <div id="deleteModal" class="modal hidden">
+        <h2>Confirmar Exclusão</h2>
+        <p id="deleteModalText">Você tem certeza?</p>
+        <form id="confirmDeleteForm" method="post" style="display: inline;">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="button" id="cancelDeleteBtn" class="btn btn-secondary">Cancelar</button>
+                <button type="submit" class="btn btn-delete-confirm">Sim, Excluir</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Link para nosso arquivo JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

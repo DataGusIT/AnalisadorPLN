@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Extrator de Documentos{% endblock %}
+
+{% block content %}
+    <div class="sub-nav">
+        <a href="{% url 'extractor:historico_documentos' %}" class="sub-nav-link"><i class="fa-solid fa-list-ul"></i> Ver Histórico</a>
+    </div>
+    <h1>Extrator de Informações</h1>
+    <p class="subtitle">Faça o upload de um documento para identificar nomes, locais e organizações.</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit"><i class="fa-solid fa-cogs"></i> Enviar e Extrair Informações</button>
+    </form>
+{% endblock %}

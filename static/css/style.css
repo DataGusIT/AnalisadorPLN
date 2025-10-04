@@ -1,0 +1,321 @@
+:root {
+    --background-color: #f5f5f7;
+    --container-bg: #ffffff;
+    --text-color: #1d1d1f;
+    --secondary-text-color: #6e6e73;
+    --border-color: #d2d2d7;
+    --accent-color: #0071e3;
+    --accent-color-hover: #0077ed;
+    --delete-color: #d93025;
+    --success-color: #1e8e3e;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    --border-radius: 18px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 52px;
+}
+
+header .logo {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+header .logo i {
+    color: var(--accent-color);
+}
+
+header nav a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 0.9em;
+    font-weight: 500;
+    margin-left: 25px;
+    padding: 8px 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+header nav a:hover,
+header nav a.active {
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.main-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    flex-grow: 1;
+    width: 90%;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.content-box {
+    background-color: var(--container-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 40px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-table th,
+.history-table td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.history-table th {
+    font-weight: 600;
+    color: var(--secondary-text-color);
+    font-size: 0.9em;
+}
+
+.history-table tr:last-child td {
+    border-bottom: none;
+}
+
+.history-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.history-table .actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.history-table .actions-cell a {
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-details {
+    color: var(--accent-color);
+}
+
+.btn-delete-link {
+    color: var(--delete-color);
+}
+
+/* --- Mensagens de Alerta (Sucesso) --- */
+.alerts-container {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 2000;
+    width: 350px;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 12px;
+    color: white;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.alert.success {
+    background-color: var(--success-color);
+}
+
+.alert .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+/* --- Modal de Exclusão --- */
+.hidden {
+    display: none !important;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 3000;
+    animation: fadeIn 0.3s;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 90%;
+    max-width: 450px;
+    z-index: 3001;
+    animation: fadeIn 0.3s ease-out;
+    text-align: center;
+}
+
+.modal h2 {
+    margin-top: 0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.form-actions .btn {
+    width: auto;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s ease;
+}
+
+.btn-delete-confirm {
+    background-color: var(--delete-color);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #e8e8e8;
+    color: var(--text-color);
+}
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+    header {
+        padding: 0 20px;
+    }
+
+    header nav a {
+        margin-left: 15px;
+        font-size: 0.8em;
+    }
+
+    .main-container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .content-box {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .history-table {
+        display: block;
+        width: 100%;
+    }
+
+    .history-table thead {
+        display: none;
+    }
+
+    .history-table tbody,
+    .history-table tr,
+    .history-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .history-table tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+    }
+
+    .history-table td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .history-table td:last-child {
+        border-bottom: none;
+    }
+
+    .history-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .history-table .actions-cell {
+        padding: 15px;
+    }
+
+    .alerts-container {
+        width: auto;
+        left: 20px;
+        right: 20px;
+    }
+}
