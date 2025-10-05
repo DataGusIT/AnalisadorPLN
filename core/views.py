@@ -12,7 +12,7 @@ from django.contrib import messages
 from collections import defaultdict
 
 # Carregue o modelo do spaCy uma vez quando o servidor iniciar
-nlp = spacy.load("pt_core_news_lg")
+nlp = spacy.load("pt_core_news_sm")
 
 # --- FUNÇÃO AUXILIAR PARA EXTRAIR TEXTO ---
 def extrair_texto_de_arquivo(caminho_arquivo):
