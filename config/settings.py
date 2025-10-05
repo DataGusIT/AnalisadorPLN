@@ -90,7 +90,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'pt-br' # Alterado para pt-br
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo' # Alterado de 'UTC' para o fuso de São Paulo
 
 USE_I18N = True
 
