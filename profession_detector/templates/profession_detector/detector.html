@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="upload-section text-center">
+        <div class="upload-header">
+            <i class="fa-solid fa-compass title-icon"></i>
+            <h1 class="main-title">Detector de Profissões</h1>
+            <p class="subtitle">Descreva seus interesses e hobbies para receber sugestões de carreiras alinhadas ao seu perfil.</p>
+        </div>
+
+        <form method="POST" class="upload-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <textarea name="hobbies" class="form-control-textarea" rows="6" placeholder="Ex: Gosto de tecnologia, programar pequenos jogos, desenhar e me interesso por biologia e como o corpo humano funciona...">{{ submitted_text }}</textarea>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fa-solid fa-magnifying-glass"></i> Analisar Interesses
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ALERTA DE LINGUAGEM INAPROPRIADA -->
+    <!-- ============================================ -->
+    {% if aviso_palavrao %}
+    <div class="alert-palavrao-container mt-5">
+        <div class="alert-palavrao">
+            <div class="alert-header">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h2>ALERTA DE LINGUAGEM INAPROPRIADA</h2>
+            </div>
+
+            <div class="alert-body">
+                <div class="detection-info">
+                    <p><strong><i class="fa-solid fa-robot"></i> O sistema de PLN detectou linguagem inadequada em sua resposta.</strong></p>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="label"><i class="fa-solid fa-exclamation-circle"></i> Palavras detectadas:</span>
+                            <span class="value">{{ aviso_palavrao.quantidade }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label"><i class="fa-solid fa-face-frown"></i> Estado emocional:</span>
+                            <span class="value">Frustração/Raiva</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label"><i class="fa-solid fa-volume-high"></i> Tom da mensagem:</span>
+                            <span class="value">Agressivo/Defensivo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3><i class="fa-solid fa-question-circle"></i> Por que você pode ter usado esse vocabulário?</h3>
+                    <ul class="reasons-list">
+                        <li><i class="fa-solid fa-xmark"></i> Frustração com o questionário</li>
+                        <li><i class="fa-solid fa-xmark"></i> Desconforto com perguntas pessoais</li>
+                        <li><i class="fa-solid fa-xmark"></i> Tentativa de "testar" o sistema</li>
+                        <li><i class="fa-solid fa-xmark"></i> Revolta com a situação atual</li>
+                        <li><i class="fa-solid fa-xmark"></i> Falta de paciência com o processo</li>
+                        <li><i class="fa-solid fa-xmark"></i> Descrença no resultado do teste</li>
+                    </ul>
+                </div>
+
+                <div class="analysis-section">
+                    <h3><i class="fa-solid fa-brain"></i> O que isso revela sobre você:</h3>
+                    <ul class="insights-list">
+                        <li><i class="fa-solid fa-circle-dot"></i> Você pode estar passando por um momento difícil</li>
+                        <li><i class="fa-solid fa-circle-dot"></i> Talvez esteja se sentindo pressionado(a)</li>
+                        <li><i class="fa-solid fa-circle-dot"></i> Pode estar com dificuldade de se expressar adequadamente</li>
+                        <li><i class="fa-solid fa-circle-dot"></i> Demonstra resistência ao autoconhecimento</li>
+                    </ul>
+                </div>
+
+                <div class="nlp-power-section">
+                    <h3><i class="fa-solid fa-microchip"></i> Poder do PLN (Processamento de Linguagem Natural)</h3>
+                    <p class="nlp-description">
+                        Este sistema <strong>NÃO é apenas um questionário simples</strong>. 
+                        Utilizamos tecnologia avançada de Inteligência Artificial que:
+                    </p>
+                    <ul class="nlp-features">
+                        <li><i class="fa-solid fa-check-circle"></i> Detecta emoções nas suas respostas</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Identifica padrões de comportamento</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Reconhece tentativas de manipular resultados</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Analisa seu vocabulário e tom emocional</li>
+                        <li><i class="fa-solid fa-check-circle"></i> Compreende contexto, não apenas palavras isoladas</li>
+                    </ul>
+                    <p class="nlp-warning">
+                        <i class="fa-solid fa-bullseye"></i> <strong>Mesmo que você tente "enganar" o sistema ou responder de forma evasiva, 
+                        a IA consegue interpretar suas VERDADEIRAS intenções.</strong>
+                    </p>
+                </div>
+
+                <div class="recommendation-section">
+                    <h3><i class="fa-solid fa-hand-holding-heart"></i> Recomendação:</h3>
+                    <p>
+                        Respire fundo e tente novamente com sinceridade. 
+                        Este teste foi feito para <strong>AJUDAR</strong> você, não para julgá-lo(a). 
+                        Quanto mais honesto(a) for, melhor será o resultado e as recomendações de carreira.
+                    </p>
+                </div>
+
+                <div class="detected-words">
+                    <small>
+                        <i class="fa-solid fa-search"></i> 
+                        Termos detectados: 
+                        {% for palavra in aviso_palavrao.palavras %}
+                            <span class="censored-word">***</span>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        {% if aviso_palavrao.tem_mais %}...{% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ============================================ -->
+    <!-- RESULTADOS NORMAIS (COM NOVA MENSAGEM) -->
+    <!-- ============================================ -->
+    {% if suggestions and not aviso_palavrao %}
+    <div class="results-container mt-5">
+        
+        <!-- NOVA MENSAGEM DE INCENTIVO -->
+        <div class="results-intro">
+            <div class="results-intro-icon">
+                <i class="fa-solid fa-rocket-launch"></i>
+            </div>
+            <div class="results-intro-text">
+                <h3>Análise Concluída com Sucesso!</h3>
+                <p>Com base nas suas paixões, nossa IA identificou algumas carreiras promissoras. Lembre-se: este é um ponto de partida para sua jornada. Explore as opções, pesquise mais a fundo e, acima de tudo, siga sua curiosidade!</p>
+            </div>
+        </div>
+        <!-- FIM DA NOVA MENSAGEM -->
+
+        <h2 class="results-title"><i class="fa-solid fa-lightbulb"></i> Sugestões de Carreira</h2>
+        <div class="results-list mt-3">
+            {% for profession, score in suggestions %}
+            <div class="result-item">
+                <div class="result-info">
+                    <h5 class="profession-name mb-1">{{ profession }}</h5>
+                    <p class="profession-description">Esta área parece ter alta compatibilidade com seus interesses.</p>
+                </div>
+                <div class="result-score">
+                    <span>Compatibilidade</span>
+                    <strong>{{ score }} Ponto{{ score|pluralize }}</strong>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% elif request.method == 'POST' and not aviso_palavrao %}
+    <div class="alert alert-warning mt-4 centered-alert" role="alert">
+         <i class="fa-solid fa-triangle-exclamation"></i> Não foi possível encontrar sugestões. Tente fornecer mais detalhes!
+    </div>
+    {% endif %}
+
+    <!-- ============================================ -->
+    <!-- NOVA SEÇÃO EDUCATIVA SOBRE PLN -->
+    <!-- ============================================ -->
+    <div class="nlp-explanation-section">
+        <div class="nlp-explanation-box">
+            <h2><i class="fa-solid fa-brain"></i> A Magia por Trás das Palavras: O que é PLN?</h2>
+            
+            <p class="nlp-analogy">
+                Imagine que você está ensinando um computador a ler e, mais importante, a <strong>entender</strong> o que ele está lendo, assim como um ser humano. Isso é o <strong>Processamento de Linguagem Natural (PLN)</strong>!
+            </p>
+
+            <ul class="nlp-steps-list">
+                <li>
+                    <div class="step-icon"><i class="fa-solid fa-keyboard"></i></div>
+                    <div class="step-text">
+                        <strong>Você Escreve:</strong> Você digita seus hobbies e interesses. Para o computador, isso é apenas um monte de texto.
+                    </div>
+                </li>
+                <li>
+                    <div class="step-icon"><i class="fa-solid fa-highlighter"></i></div>
+                    <div class="step-text">
+                        <strong>A IA "Lê" e Destaca:</strong> O sistema de PLN lê seu texto e, como se usasse um marca-texto, identifica as palavras-chave mais importantes (verbos, substantivos, ideias).
+                    </div>
+                </li>
+                <li>
+                    <div class="step-icon"><i class="fa-solid fa-lightbulb-on"></i></div>
+                    <div class="step-text">
+                        <strong>A IA Conecta as Ideias:</strong> Ela vai além das palavras. Se você escreveu "desenhar", "criar" e "cores", a IA entende que a ideia central é "criatividade" e "arte visual".
+                    </div>
+                </li>
+                <li>
+                    <div class="step-icon"><i class="fa-solid fa-map-signs"></i></div>
+                    <div class="step-text">
+                        <strong>A IA Sugere um Caminho:</strong> Com base nessas ideias, a IA cruza as informações com um "mapa" de profissões e mostra quais carreiras mais combinam com seu perfil.
+                    </div>
+                </li>
+            </ul>
+
+            <div class="real-world-examples">
+                <h4><i class="fa-solid fa-star-shooting"></i> Onde mais essa tecnologia é usada?</h4>
+                <p>Você usa PLN todos os dias em assistentes virtuais (como a Siri e a Alexa), em corretores ortográficos inteligentes, nos resultados de busca do Google e em chatbots de atendimento. A tecnologia que você acabou de usar está moldando o futuro, e agora você sabe como ela funciona!</p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

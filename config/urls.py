@@ -11,6 +11,7 @@ urlpatterns = [
     path('', include('core.urls')), 
     # Adiciona as rotas do novo app sob o prefixo 'extrator/'
     path('extrator/', include('extractor.urls')), 
+    path('detector/', include('profession_detector.urls')),
 ]
 
 

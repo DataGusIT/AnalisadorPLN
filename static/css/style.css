@@ -24,6 +24,8 @@
     --delete-color: #dc3545;
     --delete-color-hover: #b02a37;
     --success-color: #198754;
+    --warning-bg-color: #fff3cd;
+    --warning-text-color: #664d03;
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --transition-speed: 0.3s;
     --border-radius: 20px;
@@ -46,6 +48,10 @@ html[data-theme="dark"] {
     --secondary-btn-bg: #30363d;
     --secondary-btn-hover-bg: #484f58;
     --secondary-btn-text-color: #c9d1d9;
+    --warning-bg-color: #664d03;
+    /* Usando um fundo mais escuro */
+    --warning-text-color: #ffecb5;
+    /* E um texto mais claro */
 }
 
 html[data-theme="dark"] .skill-tag {
@@ -173,7 +179,8 @@ header nav a.nav-link.active {
     background-color: var(--container-bg);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    padding: 45px;
+    padding: 35px 45px;
+    /* Padding vertical menor, horizontal mantido */
     border: 1px solid var(--border-color);
     position: relative;
 }
@@ -1592,4 +1599,603 @@ input:checked+.slider .stars {
     .form-actions-footer .btn {
         width: 100%;
     }
+}
+
+/* ======================================================= */
+/* ===== PÁGINA DETECTOR DE PROFISSÕES (ESTILOS ÚNICOS) ==== */
+/* ======================================================= */
+
+/* Estilização específica para a Textarea, para que ela se pareça com a caixa de upload */
+.form-control-textarea {
+    width: 100%;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    /* Borda sólida em vez de dashed? */
+    border-radius: 14px;
+    /* Raio menor que o container geral */
+    text-align: left;
+    /* Alinhar texto à esquerda é mais comum */
+    background-color: transparent;
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: 1em;
+    line-height: 1.6;
+    resize: vertical;
+    transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease;
+    box-sizing: border-box;
+}
+
+.form-control-textarea::placeholder {
+    color: var(--secondary-text-color);
+}
+
+.form-control-textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background-color: transparent;
+    /* Remove fundo no foco se não quiser */
+    box-shadow: 0 0 0 3px rgba(0, 82, 212, 0.2);
+}
+
+html[data-theme="dark"] .form-control-textarea:focus {
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.25);
+}
+
+/* --- Seção de Resultados (mantém o estilo que você já criou) --- */
+.results-container {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border-color);
+}
+
+.results-title {
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.results-title i {
+    color: var(--accent-color);
+}
+
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.result-item {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.result-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+.result-info {
+    flex-grow: 1;
+}
+
+.profession-name {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.profession-description {
+    font-size: 0.95em;
+    color: var(--secondary-text-color);
+    margin: 0;
+}
+
+.result-score {
+    background-color: var(--tag-bg);
+    color: var(--accent-color);
+    padding: 15px 20px;
+    border-radius: 12px;
+    text-align: center;
+    flex-shrink: 0;
+    min-width: 120px;
+}
+
+.result-score span {
+    display: block;
+    font-size: 0.8em;
+    margin-bottom: 3px;
+    opacity: 0.8;
+}
+
+.result-score strong {
+    font-size: 1.1em;
+    font-weight: 700;
+}
+
+/* Estilo unificado para .alert-warning que usa variáveis de tema */
+.alert.alert-warning {
+    background-color: var(--warning-bg-color);
+    color: var(--warning-text-color);
+    border-left-color: rgba(0, 0, 0, 0.2);
+    /* Mantém a borda esquerda padrão */
+    /* Garante que o ícone e o texto estejam bem alinhados */
+    display: flex;
+    align-items: center;
+}
+
+/* Garante contraste da borda no tema escuro */
+html[data-theme="dark"] .alert.alert-warning {
+    border-left-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Espaçamento do ícone dentro do alerta */
+.alert i {
+    margin-right: 10px;
+    /* Ajuste o valor se necessário */
+    font-size: 1.1em;
+    /* Tamanho do ícone */
+}
+
+/* Centraliza o alerta de aviso na página do Detector */
+.alert.centered-alert {
+    max-width: 700px;
+    /* Limita a largura do alerta */
+    margin: 40px auto 0 auto;
+    /* Margem top e centraliza horizontalmente */
+    text-align: left;
+    /* Mantém o texto alinhado à esquerda dentro do alerta */
+}
+
+.upload-form .form-group {
+    margin-bottom: 25px;
+    /* Ajuste este valor conforme necessário (ex: 20px, 30px) */
+}
+
+/* Garante que a div d-grid não tenha margem superior que anule a inferior do form-group */
+.upload-form .d-grid {
+    margin-top: 0;
+}
+
+/* ======================================================= */
+/* ===== ALERTA DE LINGUAGEM INAPROPRIADA (REFEITO) ====== */
+/* ======================================================= */
+
+/* Container que envolve o card do alerta */
+.alert-palavrao-container {
+    animation: fadeIn 0.5s ease-out;
+    /* Usa a animação padrão */
+}
+
+/* O card principal do alerta, agora usando variáveis de tema */
+.alert-palavrao {
+    background-color: var(--container-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--delete-color);
+    /* Borda de destaque vermelha */
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    /* Garante que o header se encaixe nos cantos arredondados */
+    margin-top: 40px;
+}
+
+/* Cabeçalho do alerta, mais sóbrio e profissional */
+.alert-palavrao .alert-header {
+    padding: 25px 30px;
+    background-color: var(--card-bg);
+    /* Fundo sutil */
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+    color: var(--delete-color);
+    /* Cor do texto e ícone usa a variável de erro */
+}
+
+.alert-palavrao .alert-header i {
+    font-size: 2.5em;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.alert-palavrao .alert-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Corpo principal do alerta */
+.alert-palavrao .alert-body {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    /* Espaçamento entre as seções internas */
+}
+
+/* Grid para as seções de análise, para melhor layout em telas maiores */
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+/* Estilo unificado para todas as sub-seções (stats, porquê, etc.) */
+.detection-info,
+.analysis-section,
+.nlp-power-section,
+.recommendation-section {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.detection-info p strong {
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1em;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.stat-item {
+    background-color: var(--background-color);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.stat-item .label {
+    font-size: 0.9em;
+    color: var(--secondary-text-color);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-item .value {
+    font-size: 1.05em;
+    font-weight: 600;
+    color: var(--delete-color);
+    /* Destaque na cor de erro */
+}
+
+/* Títulos das sub-seções */
+.analysis-section h3 {
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.analysis-section h3 i {
+    color: var(--accent-color);
+    /* Ícone com cor de destaque do sistema */
+}
+
+/* Listas de itens */
+.reasons-list,
+.insights-list,
+.nlp-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reasons-list li,
+.insights-list li,
+.nlp-features li {
+    color: var(--secondary-text-color);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.6;
+}
+
+.reasons-list li i,
+.insights-list li i,
+.nlp-features li i {
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+/* Cores específicas para os ícones das listas */
+.reasons-list li i {
+    color: var(--delete-color);
+}
+
+.insights-list li i {
+    color: var(--accent-color);
+}
+
+.nlp-features li i {
+    color: var(--success-color);
+}
+
+
+/* Seção "Poder do PLN" */
+.nlp-power-section {
+    border-color: var(--accent-color);
+    /* Borda na cor de destaque */
+}
+
+.nlp-power-section h3 i {
+    color: var(--accent-color);
+}
+
+.nlp-warning {
+    background-color: var(--warning-bg-color);
+    color: var(--warning-text-color);
+    border-left: 4px solid var(--warning-text-color);
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+html[data-theme="dark"] .nlp-warning {
+    border-left-color: var(--warning-text-color);
+}
+
+.nlp-warning i {
+    margin-right: 8px;
+}
+
+/* Seção de Recomendação (com cores de sucesso) */
+.recommendation-section {
+    border-color: var(--success-color);
+    background-color: var(--card-bg);
+}
+
+.recommendation-section h3 i {
+    color: var(--success-color);
+}
+
+/* Rodapé com palavras censuradas */
+.detected-words {
+    text-align: center;
+    margin-top: 10px;
+    color: var(--secondary-text-color);
+    font-size: 0.9em;
+}
+
+.censored-word {
+    background-color: var(--text-color);
+    color: var(--text-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+    user-select: none;
+}
+
+/* Ajustes responsivos para o novo layout */
+@media (max-width: 768px) {
+    .analysis-grid {
+        grid-template-columns: 1fr;
+        /* Coluna única em telas menores */
+    }
+
+    .alert-palavrao .alert-body {
+        padding: 20px;
+    }
+
+    .alert-palavrao .alert-header h2 {
+        font-size: 1.2em;
+    }
+}
+
+/* ======================================================= */
+/* ===== MELHORIAS NA PÁGINA DE RESULTADOS (NOVO) ====== */
+/* ======================================================= */
+
+/* Estilo para a nova caixa de mensagem de incentivo */
+.results-intro {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--success-color);
+    /* Destaque verde de sucesso */
+    border-radius: 16px;
+    padding: 25px 30px;
+    margin-bottom: 40px;
+    /* Espaço entre a introdução e a lista */
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.results-intro-icon i {
+    font-size: 2.5em;
+    color: var(--success-color);
+}
+
+.results-intro-text h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.results-intro-text p {
+    margin: 0;
+    color: var(--secondary-text-color);
+    line-height: 1.6;
+}
+
+/* ======================================================= */
+/* ===== AJUSTES RESPONSIVOS (NOVO) ====================== */
+/* ======================================================= */
+
+/* Aplica estas regras em telas menores, como celulares */
+@media (max-width: 576px) {
+
+    /* Faz com que a mensagem de incentivo empilhe verticalmente */
+    .results-intro {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+        padding: 25px;
+    }
+
+    /* ---- A CORREÇÃO PRINCIPAL PARA OS CARDS DE RESULTADO ---- */
+
+    /* Faz o card de resultado empilhar verticalmente */
+    .result-item {
+        flex-direction: column;
+        align-items: flex-start;
+        /* Alinha o conteúdo à esquerda */
+        gap: 15px;
+    }
+
+    /* Move a caixa de pontuação para o canto direito */
+    .result-score {
+        align-self: flex-end;
+        min-width: 110px;
+        padding: 10px 15px;
+    }
+
+    .result-score span {
+        font-size: 0.75em;
+    }
+
+    .result-score strong {
+        font-size: 1em;
+    }
+}
+
+
+.nlp-explanation-section {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border-color);
+}
+
+.nlp-explanation-box {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 30px 40px;
+    text-align: center;
+}
+
+.nlp-explanation-box h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--text-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nlp-explanation-box h2 i {
+    color: var(--accent-color);
+}
+
+.nlp-analogy {
+    max-width: 700px;
+    margin: 0 auto 30px auto;
+    font-size: 1.1em;
+    line-height: 1.7;
+    color: var(--secondary-text-color);
+}
+
+.nlp-steps-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 30px auto;
+    max-width: 650px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.nlp-steps-list li {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.step-icon {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    background-color: var(--tag-bg);
+    color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+}
+
+.step-text strong {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.step-text {
+    color: var(--secondary-text-color);
+}
+
+.real-world-examples {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--accent-color);
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 30px;
+    text-align: left;
+}
+
+.real-world-examples h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.real-world-examples p {
+    margin: 0;
+    line-height: 1.7;
+    color: var(--secondary-text-color);
 }
