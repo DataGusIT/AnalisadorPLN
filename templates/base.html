@@ -33,11 +33,25 @@
 
     <header>
         <div class="nav-container">
-            <a href="{% url 'core:upload_curriculo' %}" class="logo">
-                <i class="fa-solid fa-brain"></i>
-                <span>Analisador IA</span>
-            </a>
 
+            <!-- CONTAINER PARA AGRUPAR ITENS DA ESQUERDA -->
+            <div class="header-left">
+                <a href="{% url 'core:upload_curriculo' %}" class="logo">
+                    <i class="fa-solid fa-brain"></i>
+                    <span>Analisador IA</span>
+                </a>
+                
+                <!-- SEPARADOR VERTICAL -->
+                <div class="separator"></div>
+
+                <!-- LOGOS DAS INSTITUIÇÕES -->
+                <div class="header-logos">
+                    <img src="{% static 'images/image 1.png' %}" alt="Logo Fatec Itaquaquecetuba">
+                    <img src="{% static 'images/image 2.png' %}" alt="Logo Centro Paula Souza" id="cps-logo">
+                </div>
+            </div>
+
+            <!-- CONTROLES DE NAVEGAÇÃO -->
             <div class="nav-controls">
                 <nav id="main-nav">
                     <button id="close-menu-btn" class="close-menu-btn">
@@ -49,7 +63,6 @@
                     <a href="{% url 'extractor:upload_documento' %}" class="nav-link {% if request.resolver_match.app_name == 'extractor' %}active{% endif %}">
                         <i class="fa-solid fa-wand-magic-sparkles"></i> Extrator de Documentos
                     </a>
-                    <!-- NOVO LINK ADICIONADO ABAIXO -->
                     <a href="{% url 'profession_detector:profession_detector' %}" class="nav-link {% if request.resolver_match.app_name == 'profession_detector' %}active{% endif %}">
                         <i class="fa-solid fa-compass"></i> Detector de Profissões
                     </a>
@@ -98,6 +111,7 @@
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
+            
         </div>
     </header>
 

@@ -444,6 +444,32 @@ PROFESSION_KEYWORDS = {
     },
 }
 
+PROFESSION_DESCRIPTIONS = {
+    "Chef de Cozinha": """
+        Profissional criativo que transforma ingredientes em pratos deliciosos.
+        Trabalha com culinária, gastronomia, receitas e sabores. Cria experiências
+        gastronômicas únicas em restaurantes e eventos. Combina técnica, arte e paixão
+        por comida. Cozinha alimentos com criatividade e amor pela gastronomia.
+    """,
+    "Desenvolvedor(a) de Jogos": """
+        Cria jogos eletrônicos e experiências interativas. Usa programação, design
+        e criatividade para desenvolver videogames. Trabalha com engines como Unity
+        e Unreal, criando mundos virtuais, personagens e mecânicas de gameplay.
+        Transforma ideias em entretenimento digital. Joga e desenvolve games.
+    """,
+    "Designer Gráfico": """
+        Profissional que cria identidades visuais, logotipos e materiais gráficos.
+        Trabalha com cores, tipografia, composição e design. Usa ferramentas como
+        Photoshop e Illustrator para criar artes, cartazes e peças publicitárias.
+        Transforma conceitos em comunicação visual.
+    """,
+    "Músico(a)": """
+        Artista que cria e interpreta música. Toca instrumentos, compõe melodias
+        e se apresenta em shows e gravações. Expressa emoções através de sons,
+        ritmos e harmonias. Trabalha com criatividade musical e performance artística.
+    """,
+}
+
 def detectar_linguagem_inapropriada(texto):
     """
     Detecta palavrões e retorna informações sobre eles
