@@ -2238,7 +2238,7 @@ html[data-theme="dark"] .nlp-warning {
 
 /* Ajuste de tamanho específico para o logo do CPS */
 #cps-logo {
-    height: 48px;
+    height: 70px;
     /* Aumenta a altura apenas deste logo */
 }
 
@@ -2251,4 +2251,22 @@ html[data-theme="dark"] .nlp-warning {
     .separator {
         display: none;
     }
+}
+
+.test-models-link {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.test-models-link a {
+    color: var(--primary-color, #0056b3);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.test-models-link a:hover {
+    border-bottom: 1px solid var(--primary-color, #0056b3);
 }
