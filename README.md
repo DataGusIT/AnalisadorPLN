@@ -35,7 +35,7 @@ Construído com Django e a biblioteca spaCy, este projeto transforma documentos 
 
 | Página de Upload | Página de Resultados da Análise |
 | :---: | :---: |
-| ![Página de Upload](link-para-sua-imagem-de-upload-aqui) | ![Página de Resultados](link-para-sua-imagem-de-resultados-aqui) |
+| <img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/b32fac96-3629-4b7b-93e0-30a728d80808" /> | ![Página de Resultados](link-para-sua-imagem-de-resultados-aqui) |
 
 ## Tecnologias
 
